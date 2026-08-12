@@ -1,0 +1,39 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "AutoChartSwitch.GameBridge/1.0.0": {
+        "dependencies": {
+          "AutoChartSwitch.Core": "1.0.0"
+        },
+        "runtime": {
+          "AutoChartSwitch.GameBridge.dll": {}
+        }
+      },
+      "AutoChartSwitch.Core/1.0.0": {
+        "runtime": {
+          "AutoChartSwitch.Core.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "AutoChartSwitch.GameBridge/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AutoChartSwitch.Core/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

@@ -1,0 +1,15 @@
+D:\code\SVCAutomationSystem\AutoChartSwitch\src\AutoChartSwitch.Obs\bin\Debug\net8.0\AutoChartSwitch.Obs.deps.json
+D:\code\SVCAutomationSystem\AutoChartSwitch\src\AutoChartSwitch.Obs\bin\Debug\net8.0\AutoChartSwitch.Obs.dll
+D:\code\SVCAutomationSystem\AutoChartSwitch\src\AutoChartSwitch.Obs\bin\Debug\net8.0\AutoChartSwitch.Obs.pdb
+D:\code\SVCAutomationSystem\AutoChartSwitch\src\AutoChartSwitch.Obs\bin\Debug\net8.0\AutoChartSwitch.Core.dll
+D:\code\SVCAutomationSystem\AutoChartSwitch\src\AutoChartSwitch.Obs\bin\Debug\net8.0\AutoChartSwitch.Core.pdb
+D:\code\SVCAutomationSystem\AutoChartSwitch\src\AutoChartSwitch.Obs\obj\Debug\net8.0\AutoChartSwitch.Obs.csproj.AssemblyReference.cache
+D:\code\SVCAutomationSystem\AutoChartSwitch\src\AutoChartSwitch.Obs\obj\Debug\net8.0\AutoChartSwitch.Obs.GeneratedMSBuildEditorConfig.editorconfig
+D:\code\SVCAutomationSystem\AutoChartSwitch\src\AutoChartSwitch.Obs\obj\Debug\net8.0\AutoChartSwitch.Obs.AssemblyInfoInputs.cache
+D:\code\SVCAutomationSystem\AutoChartSwitch\src\AutoChartSwitch.Obs\obj\Debug\net8.0\AutoChartSwitch.Obs.AssemblyInfo.cs
+D:\code\SVCAutomationSystem\AutoChartSwitch\src\AutoChartSwitch.Obs\obj\Debug\net8.0\AutoChartSwitch.Obs.csproj.CoreCompileInputs.cache
+D:\code\SVCAutomationSystem\AutoChartSwitch\src\AutoChartSwitch.Obs\obj\Debug\net8.0\AutoChar.68B6A184.Up2Date
+D:\code\SVCAutomationSystem\AutoChartSwitch\src\AutoChartSwitch.Obs\obj\Debug\net8.0\AutoChartSwitch.Obs.dll
+D:\code\SVCAutomationSystem\AutoChartSwitch\src\AutoChartSwitch.Obs\obj\Debug\net8.0\refint\AutoChartSwitch.Obs.dll
+D:\code\SVCAutomationSystem\AutoChartSwitch\src\AutoChartSwitch.Obs\obj\Debug\net8.0\AutoChartSwitch.Obs.pdb
+D:\code\SVCAutomationSystem\AutoChartSwitch\src\AutoChartSwitch.Obs\obj\Debug\net8.0\ref\AutoChartSwitch.Obs.dll

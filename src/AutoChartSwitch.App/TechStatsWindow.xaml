@@ -1,0 +1,9 @@
+<Window x:Class="AutoChartSwitch.App.TechStatsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:AutoChartSwitch.App"
+        Title="Auto Chart Switch Tech Stats" Width="508" Height="200"
+        AllowsTransparency="True" Background="Transparent" WindowStyle="None"
+        ResizeMode="NoResize" ShowInTaskbar="True" SizeToContent="Manual">
+    <local:TechStatsRenderer x:Name="Renderer" />
+</Window>

@@ -1,0 +1,15 @@
+D:\code\SVCAutomationSystem\AutoChartSwitchV2\src\AutoChartSwitch.GameBridge\bin\Release\net8.0\AutoChartSwitch.GameBridge.deps.json
+D:\code\SVCAutomationSystem\AutoChartSwitchV2\src\AutoChartSwitch.GameBridge\bin\Release\net8.0\AutoChartSwitch.GameBridge.dll
+D:\code\SVCAutomationSystem\AutoChartSwitchV2\src\AutoChartSwitch.GameBridge\bin\Release\net8.0\AutoChartSwitch.GameBridge.pdb
+D:\code\SVCAutomationSystem\AutoChartSwitchV2\src\AutoChartSwitch.GameBridge\bin\Release\net8.0\AutoChartSwitch.Core.dll
+D:\code\SVCAutomationSystem\AutoChartSwitchV2\src\AutoChartSwitch.GameBridge\bin\Release\net8.0\AutoChartSwitch.Core.pdb
+D:\code\SVCAutomationSystem\AutoChartSwitchV2\src\AutoChartSwitch.GameBridge\obj\Release\net8.0\AutoChartSwitch.GameBridge.csproj.AssemblyReference.cache
+D:\code\SVCAutomationSystem\AutoChartSwitchV2\src\AutoChartSwitch.GameBridge\obj\Release\net8.0\AutoChartSwitch.GameBridge.GeneratedMSBuildEditorConfig.editorconfig
+D:\code\SVCAutomationSystem\AutoChartSwitchV2\src\AutoChartSwitch.GameBridge\obj\Release\net8.0\AutoChartSwitch.GameBridge.AssemblyInfoInputs.cache
+D:\code\SVCAutomationSystem\AutoChartSwitchV2\src\AutoChartSwitch.GameBridge\obj\Release\net8.0\AutoChartSwitch.GameBridge.AssemblyInfo.cs
+D:\code\SVCAutomationSystem\AutoChartSwitchV2\src\AutoChartSwitch.GameBridge\obj\Release\net8.0\AutoChartSwitch.GameBridge.csproj.CoreCompileInputs.cache
+D:\code\SVCAutomationSystem\AutoChartSwitchV2\src\AutoChartSwitch.GameBridge\obj\Release\net8.0\AutoChar.1943E190.Up2Date
+D:\code\SVCAutomationSystem\AutoChartSwitchV2\src\AutoChartSwitch.GameBridge\obj\Release\net8.0\AutoChartSwitch.GameBridge.dll
+D:\code\SVCAutomationSystem\AutoChartSwitchV2\src\AutoChartSwitch.GameBridge\obj\Release\net8.0\refint\AutoChartSwitch.GameBridge.dll
+D:\code\SVCAutomationSystem\AutoChartSwitchV2\src\AutoChartSwitch.GameBridge\obj\Release\net8.0\AutoChartSwitch.GameBridge.pdb
+D:\code\SVCAutomationSystem\AutoChartSwitchV2\src\AutoChartSwitch.GameBridge\obj\Release\net8.0\ref\AutoChartSwitch.GameBridge.dll

@@ -1,0 +1,11 @@
+D:\code\SVCAutomationSystem\AutoChartSwitch\src\AutoChartSwitch.Core\bin\Debug\net8.0\AutoChartSwitch.Core.deps.json
+D:\code\SVCAutomationSystem\AutoChartSwitch\src\AutoChartSwitch.Core\bin\Debug\net8.0\AutoChartSwitch.Core.dll
+D:\code\SVCAutomationSystem\AutoChartSwitch\src\AutoChartSwitch.Core\bin\Debug\net8.0\AutoChartSwitch.Core.pdb
+D:\code\SVCAutomationSystem\AutoChartSwitch\src\AutoChartSwitch.Core\obj\Debug\net8.0\AutoChartSwitch.Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\code\SVCAutomationSystem\AutoChartSwitch\src\AutoChartSwitch.Core\obj\Debug\net8.0\AutoChartSwitch.Core.AssemblyInfoInputs.cache
+D:\code\SVCAutomationSystem\AutoChartSwitch\src\AutoChartSwitch.Core\obj\Debug\net8.0\AutoChartSwitch.Core.AssemblyInfo.cs
+D:\code\SVCAutomationSystem\AutoChartSwitch\src\AutoChartSwitch.Core\obj\Debug\net8.0\AutoChartSwitch.Core.csproj.CoreCompileInputs.cache
+D:\code\SVCAutomationSystem\AutoChartSwitch\src\AutoChartSwitch.Core\obj\Debug\net8.0\AutoChartSwitch.Core.dll
+D:\code\SVCAutomationSystem\AutoChartSwitch\src\AutoChartSwitch.Core\obj\Debug\net8.0\refint\AutoChartSwitch.Core.dll
+D:\code\SVCAutomationSystem\AutoChartSwitch\src\AutoChartSwitch.Core\obj\Debug\net8.0\AutoChartSwitch.Core.pdb
+D:\code\SVCAutomationSystem\AutoChartSwitch\src\AutoChartSwitch.Core\obj\Debug\net8.0\ref\AutoChartSwitch.Core.dll

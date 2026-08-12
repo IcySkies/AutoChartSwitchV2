@@ -1,0 +1,13 @@
+name	width	height	origin_x	origin_y	frame_count	frame	target_x	target_y	target_width	target_height	source_width	source_height	bounding_width	bounding_height
+sp_techstats2025	36	40	0	0	2	0	0	0	36	40	36	40	36	40
+sp_techstats2025	36	40	0	0	2	1	0	0	30	37	30	37	36	40
+sp_font_techstat	32	32	13	11	10	0	13	11	4	5	4	5	32	32
+sp_font_techstat	32	32	13	11	10	1	14	11	4	5	4	5	32	32
+sp_font_techstat	32	32	13	11	10	2	13	11	4	5	4	5	32	32
+sp_font_techstat	32	32	13	11	10	3	13	11	4	5	4	5	32	32
+sp_font_techstat	32	32	13	11	10	4	13	11	4	5	4	5	32	32
+sp_font_techstat	32	32	13	11	10	5	13	11	4	5	4	5	32	32
+sp_font_techstat	32	32	13	11	10	6	13	11	4	5	4	5	32	32
+sp_font_techstat	32	32	13	11	10	7	13	11	4	5	4	5	32	32
+sp_font_techstat	32	32	13	11	10	8	13	11	4	5	4	5	32	32
+sp_font_techstat	32	32	13	11	10	9	13	11	4	5	4	5	32	32

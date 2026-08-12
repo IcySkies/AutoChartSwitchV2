@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <ApplicationIcon>Assets\Icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Icon.ico" />
+    <Resource Include="Assets\TechStats\Original\*.png" />
+    <Content Include="..\..\Memories_Sacrifice_jacket.png" Link="Memories_Sacrifice_jacket.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AutoChartSwitch.Core\AutoChartSwitch.Core.csproj" />
+    <ProjectReference Include="..\AutoChartSwitch.GameBridge\AutoChartSwitch.GameBridge.csproj" />
+    <ProjectReference Include="..\AutoChartSwitch.Obs\AutoChartSwitch.Obs.csproj" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
+  </ItemGroup>
+</Project>

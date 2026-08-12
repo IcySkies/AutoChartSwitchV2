@@ -1,0 +1,126 @@
+<Window x:Class="AutoChartSwitch.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Auto Chart Switch V2" Width="1120" Height="760" MinWidth="920" MinHeight="620"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="52" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="34" />
+        </Grid.RowDefinitions>
+
+        <Border Background="#202B31" Padding="14,8">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="AUTO CHART SWITCH V2" Foreground="White" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,22,0" />
+                    <TextBlock Text="OBS" Foreground="#AEBBC1" VerticalAlignment="Center" Margin="0,0,6,0" />
+                    <TextBox Style="{StaticResource SelectableText}" Text="{Binding ConnectionText, Mode=OneWay}" Foreground="#70D6B7" FontWeight="SemiBold" VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <CheckBox Content="Auto-switch" IsChecked="{Binding Settings.AutoSwitch, Mode=TwoWay}" Foreground="White" VerticalAlignment="Center"
+                              Margin="0,0,16,0" Checked="SettingsChanged" Unchecked="SettingsChanged" />
+                    <Button Content="Connect / Disconnect" Click="Connect_Click" />
+                    <Button Content="Refresh OBS" Click="Refresh_Click" />
+                    <Button Content="Tech Stats" Click="TechStats_Click" Margin="0" />
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <Grid Grid.Row="1" Margin="16,14">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" MinWidth="500" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="2*" MinWidth="300" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="Selected Chart" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,12" />
+                <Border Grid.Row="1" Background="{StaticResource PanelBackground}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Padding="18">
+                    <Grid>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="132" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" /><RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Chart ID" Foreground="#69747B" Margin="0,7" />
+                        <TextBox Style="{StaticResource SelectableText}" Grid.Column="1" Text="{Binding CurrentDisplay.GameChartId, Mode=OneWay}" FontWeight="SemiBold" Margin="0,7" TextWrapping="Wrap" />
+                        <TextBlock Grid.Row="1" Text="Title" Foreground="#69747B" Margin="0,7" />
+                        <TextBox Style="{StaticResource SelectableText}" Grid.Row="1" Grid.Column="1" Text="{Binding CurrentDisplay.Title, Mode=OneWay}" FontWeight="SemiBold" Margin="0,7" TextWrapping="Wrap" />
+                        <TextBlock Grid.Row="2" Text="Artist" Foreground="#69747B" Margin="0,7" />
+                        <TextBox Style="{StaticResource SelectableText}" Grid.Row="2" Grid.Column="1" Text="{Binding CurrentDisplay.Artist, Mode=OneWay}" Margin="0,7" TextWrapping="Wrap" />
+                        <TextBlock Grid.Row="3" Text="Credits" Foreground="#69747B" Margin="0,7" />
+                        <TextBox Style="{StaticResource SelectableText}" Grid.Row="3" Grid.Column="1" Text="{Binding CurrentCredits, Mode=OneWay}" Margin="0,7" TextWrapping="Wrap" />
+                        <TextBlock Grid.Row="4" Text="Difficulty" Foreground="#69747B" Margin="0,7" />
+                        <TextBox Style="{StaticResource SelectableText}" Grid.Row="4" Grid.Column="1" Text="{Binding CurrentDifficulty, Mode=OneWay}" FontWeight="SemiBold" Margin="0,7" />
+                        <TextBlock Grid.Row="5" Text="Game label" Foreground="#69747B" Margin="0,7" />
+                        <TextBox Style="{StaticResource SelectableText}" Grid.Row="5" Grid.Column="1" Text="{Binding CurrentDisplay.RawDifficultyName, Mode=OneWay}" Margin="0,7" />
+                        <TextBlock Grid.Row="6" Text="Tech stats" Foreground="#69747B" Margin="0,7" />
+                        <TextBox Style="{StaticResource SelectableText}" Grid.Row="6" Grid.Column="1" Text="{Binding CurrentTechStats, Mode=OneWay}" Margin="0,7" TextWrapping="Wrap" />
+                        <TextBlock Grid.Row="7" Grid.ColumnSpan="2" Text="Waiting for a song selection event." Foreground="#69747B" Margin="0,22,0,0">
+                            <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Collapsed" /><Style.Triggers><DataTrigger Binding="{Binding HasCurrent}" Value="False"><Setter Property="Visibility" Value="Visible" /></DataTrigger></Style.Triggers></Style></TextBlock.Style>
+                        </TextBlock>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+                <TextBlock Text="Live Status" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,12" />
+                <Border Grid.Row="1" Background="{StaticResource PanelBackground}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Padding="16">
+                    <StackPanel>
+                        <TextBlock Text="Game bridge" Foreground="#69747B" />
+                        <TextBox Style="{StaticResource SelectableText}" Text="{Binding BridgeText, Mode=OneWay}" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,3,0,14" />
+                        <TextBlock Text="Last event" Foreground="#69747B" />
+                        <TextBox Style="{StaticResource SelectableText}" Text="{Binding EventText, Mode=OneWay}" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,3,0,14" />
+                        <TextBlock Text="Lifecycle" Foreground="#69747B" />
+                        <TextBox Style="{StaticResource SelectableText}" Text="{Binding LifecycleText, Mode=OneWay}" FontWeight="SemiBold" Margin="0,3,0,14" />
+                        <Button Content="Retry second scene" Click="RetryExit_Click" HorizontalAlignment="Left">
+                            <Button.Style><Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}"><Setter Property="Visibility" Value="Collapsed" /><Style.Triggers><DataTrigger Binding="{Binding HasExitError}" Value="True"><Setter Property="Visibility" Value="Visible" /></DataTrigger></Style.Triggers></Style></Button.Style>
+                        </Button>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <Expander Grid.Row="2" Header="OBS, game bridge, and asset configuration" Margin="16,0,16,12" IsExpanded="False">
+            <Border Background="{StaticResource PanelBackground}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Padding="12">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                    <StackPanel>
+                        <WrapPanel Margin="0,0,0,10">
+                            <StackPanel Width="230" Margin="0,0,12,8"><TextBlock Text="OBS WebSocket URL" /><TextBox Text="{Binding Settings.ObsUrl, UpdateSourceTrigger=PropertyChanged}" /></StackPanel>
+                            <StackPanel Width="170" Margin="0,0,12,8"><TextBlock Text="Password" /><PasswordBox PasswordChanged="ObsPasswordBox_PasswordChanged" Loaded="ObsPasswordBox_Loaded" /></StackPanel>
+                            <StackPanel Width="100" Margin="0,0,12,8"><TextBlock Text="TCP port" /><TextBox Text="{Binding Settings.BridgePort}" /></StackPanel>
+                            <StackPanel Width="330" Margin="0,0,12,8"><TextBlock Text="Game path" /><TextBox Text="{Binding Settings.GamePath}" /></StackPanel>
+                            <StackPanel Width="300" Margin="0,0,12,8"><TextBlock Text="Jacket output folder" /><TextBox Text="{Binding Settings.JacketCachePath}" /></StackPanel>
+                            <StackPanel Width="300" Margin="0,0,12,8"><TextBlock Text="Difficulty image folder" /><TextBox Text="{Binding Settings.DifficultyCustomPath}" /></StackPanel>
+                            <StackPanel Width="180" Margin="0,0,12,8"><TextBlock Text="First scene" /><ComboBox ItemsSource="{Binding Scenes}" Text="{Binding Settings.EntryScene, UpdateSourceTrigger=PropertyChanged}" IsEditable="True" /></StackPanel>
+                            <StackPanel Width="180" Margin="0,0,12,8"><TextBlock Text="Second scene" /><ComboBox ItemsSource="{Binding Scenes}" Text="{Binding Settings.ExitScene, UpdateSourceTrigger=PropertyChanged}" IsEditable="True" /></StackPanel>
+                        </WrapPanel>
+                        <DockPanel Margin="0,0,0,6"><TextBlock Text="OBS input mappings" FontWeight="SemiBold" /><Button DockPanel.Dock="Right" Content="Refresh" Click="Refresh_Click" /></DockPanel>
+                        <WrapPanel>
+                            <StackPanel Width="165" Margin="0,0,10,8"><TextBlock Text="Title" /><ComboBox ItemsSource="{Binding TextInputs}" Text="{Binding Settings.Mappings.Title}" IsEditable="True" /></StackPanel>
+                            <StackPanel Width="165" Margin="0,0,10,8"><TextBlock Text="Artist" /><ComboBox ItemsSource="{Binding TextInputs}" Text="{Binding Settings.Mappings.Artist}" IsEditable="True" /></StackPanel>
+                            <StackPanel Width="165" Margin="0,0,10,8"><TextBlock Text="Credits (FreeType)" /><ComboBox ItemsSource="{Binding FreeTypeInputs}" Text="{Binding Settings.Mappings.Credits}" IsEditable="True" /></StackPanel>
+                            <StackPanel Width="165" Margin="0,0,10,8"><TextBlock Text="Difficulty code" /><ComboBox ItemsSource="{Binding TextInputs}" Text="{Binding Settings.Mappings.DifficultyName}" IsEditable="True" /></StackPanel>
+                            <StackPanel Width="165" Margin="0,0,10,8"><TextBlock Text="Difficulty number" /><ComboBox ItemsSource="{Binding TextInputs}" Text="{Binding Settings.Mappings.DifficultyNumber}" IsEditable="True" /></StackPanel>
+                            <StackPanel Width="165" Margin="0,0,10,8"><TextBlock Text="Jacket" /><ComboBox ItemsSource="{Binding ImageInputs}" Text="{Binding Settings.Mappings.Jacket}" IsEditable="True" /></StackPanel>
+                            <StackPanel Width="165" Margin="0,0,10,8"><TextBlock Text="Difficulty image" /><ComboBox ItemsSource="{Binding ImageInputs}" Text="{Binding Settings.Mappings.DifficultyImage}" IsEditable="True" /></StackPanel>
+                        </WrapPanel>
+                        <Button Content="Save settings" Click="SettingsChanged" HorizontalAlignment="Left" />
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Expander>
+
+        <Border Grid.Row="3" Background="#E7EAED" Padding="12,7">
+            <TextBox Style="{StaticResource SelectableText}" Text="{Binding StatusText, Mode=OneWay}" ToolTip="{Binding StatusText}" />
+        </Border>
+    </Grid>
+</Window>

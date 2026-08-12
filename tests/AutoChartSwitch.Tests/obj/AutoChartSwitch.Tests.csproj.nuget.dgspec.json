@@ -1,0 +1,385 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\tests\\AutoChartSwitch.Tests\\AutoChartSwitch.Tests.csproj": {}
+  },
+  "projects": {
+    "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.App\\AutoChartSwitch.App.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.App\\AutoChartSwitch.App.csproj",
+        "projectName": "AutoChartSwitch.App",
+        "projectPath": "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.App\\AutoChartSwitch.App.csproj",
+        "packagesPath": "C:\\Users\\白云融媒体\\.nuget\\packages\\",
+        "outputPath": "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.App\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\白云融媒体\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0-windows"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0-windows": {
+            "framework": "net8.0-windows7.0",
+            "targetAlias": "net8.0-windows",
+            "projectReferences": {
+              "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.Core\\AutoChartSwitch.Core.csproj": {
+                "projectPath": "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.Core\\AutoChartSwitch.Core.csproj"
+              },
+              "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.GameBridge\\AutoChartSwitch.GameBridge.csproj": {
+                "projectPath": "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.GameBridge\\AutoChartSwitch.GameBridge.csproj"
+              },
+              "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.Obs\\AutoChartSwitch.Obs.csproj": {
+                "projectPath": "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.Obs\\AutoChartSwitch.Obs.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true,
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.300"
+      },
+      "frameworks": {
+        "net8.0-windows": {
+          "framework": "net8.0-windows7.0",
+          "targetAlias": "net8.0-windows",
+          "dependencies": {
+            "CommunityToolkit.Mvvm": {
+              "target": "Package",
+              "version": "[8.4.2, )"
+            },
+            "System.Security.Cryptography.ProtectedData": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.WindowsDesktop.App": {
+              "privateAssets": "none"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.Core\\AutoChartSwitch.Core.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.Core\\AutoChartSwitch.Core.csproj",
+        "projectName": "AutoChartSwitch.Core",
+        "projectPath": "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.Core\\AutoChartSwitch.Core.csproj",
+        "packagesPath": "C:\\Users\\白云融媒体\\.nuget\\packages\\",
+        "outputPath": "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.Core\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\白云融媒体\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "framework": "net8.0",
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true,
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.300"
+      },
+      "frameworks": {
+        "net8.0": {
+          "framework": "net8.0",
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.GameBridge\\AutoChartSwitch.GameBridge.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.GameBridge\\AutoChartSwitch.GameBridge.csproj",
+        "projectName": "AutoChartSwitch.GameBridge",
+        "projectPath": "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.GameBridge\\AutoChartSwitch.GameBridge.csproj",
+        "packagesPath": "C:\\Users\\白云融媒体\\.nuget\\packages\\",
+        "outputPath": "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.GameBridge\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\白云融媒体\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "framework": "net8.0",
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.Core\\AutoChartSwitch.Core.csproj": {
+                "projectPath": "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.Core\\AutoChartSwitch.Core.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true,
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.300"
+      },
+      "frameworks": {
+        "net8.0": {
+          "framework": "net8.0",
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.Obs\\AutoChartSwitch.Obs.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.Obs\\AutoChartSwitch.Obs.csproj",
+        "projectName": "AutoChartSwitch.Obs",
+        "projectPath": "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.Obs\\AutoChartSwitch.Obs.csproj",
+        "packagesPath": "C:\\Users\\白云融媒体\\.nuget\\packages\\",
+        "outputPath": "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.Obs\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\白云融媒体\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "framework": "net8.0",
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.Core\\AutoChartSwitch.Core.csproj": {
+                "projectPath": "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.Core\\AutoChartSwitch.Core.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true,
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.300"
+      },
+      "frameworks": {
+        "net8.0": {
+          "framework": "net8.0",
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "obs-websocket-dotnet": {
+              "target": "Package",
+              "version": "[5.0.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\tests\\AutoChartSwitch.Tests\\AutoChartSwitch.Tests.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\tests\\AutoChartSwitch.Tests\\AutoChartSwitch.Tests.csproj",
+        "projectName": "AutoChartSwitch.Tests",
+        "projectPath": "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\tests\\AutoChartSwitch.Tests\\AutoChartSwitch.Tests.csproj",
+        "packagesPath": "C:\\Users\\白云融媒体\\.nuget\\packages\\",
+        "outputPath": "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\tests\\AutoChartSwitch.Tests\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\白云融媒体\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0-windows"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0-windows": {
+            "framework": "net8.0-windows7.0",
+            "targetAlias": "net8.0-windows",
+            "projectReferences": {
+              "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.App\\AutoChartSwitch.App.csproj": {
+                "projectPath": "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.App\\AutoChartSwitch.App.csproj"
+              },
+              "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.Core\\AutoChartSwitch.Core.csproj": {
+                "projectPath": "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.Core\\AutoChartSwitch.Core.csproj"
+              },
+              "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.Obs\\AutoChartSwitch.Obs.csproj": {
+                "projectPath": "D:\\code\\SVCAutomationSystem\\AutoChartSwitchV2\\src\\AutoChartSwitch.Obs\\AutoChartSwitch.Obs.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true,
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.300"
+      },
+      "frameworks": {
+        "net8.0-windows": {
+          "framework": "net8.0-windows7.0",
+          "targetAlias": "net8.0-windows",
+          "dependencies": {
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[17.14.1, )"
+            },
+            "xunit": {
+              "target": "Package",
+              "version": "[2.9.3, )"
+            },
+            "xunit.runner.visualstudio": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.1.4, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
