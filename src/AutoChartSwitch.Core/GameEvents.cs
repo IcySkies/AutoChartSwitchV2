@@ -9,7 +9,27 @@ public enum GameEventKind
     ChartStarted,
     ChartExitTransitionStarted,
     GameplayEnded,
-    LobbySelection
+    LobbySelection,
+    WorldcrossRoom,
+    WorldcrossGameplay,
+    ChartInfo
+}
+
+public sealed record WorldcrossPlayer
+{
+    public string SteamId64 { get; init; } = "";
+    public string Name { get; init; } = "";
+    public string State { get; init; } = "unready";
+    public decimal Rating { get; init; }
+    public int Class { get; init; }
+    public decimal Score { get; init; }
+    public decimal LastPlayScore { get; init; }
+    public string Label { get; init; } = "";
+}
+
+public sealed record WorldcrossSnapshot
+{
+    public IReadOnlyList<WorldcrossPlayer> Players { get; init; } = [];
 }
 
 public sealed record GameChartSnapshot
@@ -59,6 +79,7 @@ public sealed record GameEventEnvelope
     public DateTimeOffset TimestampUtc { get; init; } = DateTimeOffset.UtcNow;
     public GameEventKind Kind { get; init; }
     public GameChartSnapshot? Chart { get; init; }
+    public WorldcrossSnapshot? Worldcross { get; init; }
 }
 
 public interface IGameEventSource : IAsyncDisposable
@@ -92,6 +113,7 @@ public sealed class LiveChartCoordinator : IAsyncDisposable
     private readonly object _eventQueueLock = new();
     private Task _eventTail = Task.CompletedTask;
     private bool _autoSwitchSessionActive;
+    private ChartInfo? _confirmedChart;
     private bool _disposed;
 
     public ChartInfo? CurrentChart { get; private set; }
@@ -124,13 +146,21 @@ public sealed class LiveChartCoordinator : IAsyncDisposable
 
             switch (envelope.Kind)
             {
-                case GameEventKind.Selection when CurrentChart is not null:
+                case GameEventKind.ChartInfo:
+                    break;
+                case GameEventKind.Selection:
+                    if (envelope.Chart is not null) _confirmedChart = CurrentChart;
+                    else if (CurrentChart is not null) _confirmedChart = CurrentChart;
+                    if (_confirmedChart is not null)
+                        Raise(await _publisher.PublishSelectionAsync(_confirmedChart, settings, cancellationToken));
+                    break;
                 case GameEventKind.LobbySelection when CurrentChart is not null:
-                    Raise(await _publisher.PublishSelectionAsync(CurrentChart, settings, cancellationToken));
+                    _confirmedChart = CurrentChart;
+                    Raise(await _publisher.PublishSelectionAsync(_confirmedChart, settings, cancellationToken));
                     break;
                 case GameEventKind.ChartLoadingStarted:
-                    if (CurrentChart is not null)
-                        Raise(await _publisher.PublishSelectionAsync(CurrentChart, settings, cancellationToken));
+                    if (_confirmedChart is not null)
+                        Raise(await _publisher.PublishSelectionAsync(_confirmedChart, settings, cancellationToken));
                     if (settings.AutoSwitch && !_autoSwitchSessionActive)
                     {
                         _autoSwitchSessionActive = true;
@@ -138,8 +168,8 @@ public sealed class LiveChartCoordinator : IAsyncDisposable
                     }
                     break;
                 case GameEventKind.ChartStarted:
-                    if (CurrentChart is not null)
-                        Raise(await _publisher.PublishSelectionAsync(CurrentChart, settings, cancellationToken));
+                    if (_confirmedChart is not null)
+                        Raise(await _publisher.PublishSelectionAsync(_confirmedChart, settings, cancellationToken));
                     break;
                 case GameEventKind.ChartExitTransitionStarted:
                     if (_autoSwitchSessionActive)
@@ -147,9 +177,11 @@ public sealed class LiveChartCoordinator : IAsyncDisposable
                         _autoSwitchSessionActive = false;
                         if (settings.AutoSwitch) Raise(await _publisher.SwitchToExitSceneAsync(settings, cancellationToken));
                     }
+                    _confirmedChart = null;
                     break;
                 case GameEventKind.GameplayEnded:
                     _autoSwitchSessionActive = false;
+                    _confirmedChart = null;
                     break;
             }
         }

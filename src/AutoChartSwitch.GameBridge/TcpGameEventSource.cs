@@ -29,6 +29,7 @@ public sealed class TcpGameEventSource : IGameEventSource
     private static JsonSerializerOptions CreateJsonOptions()
     {
         var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+        options.Converters.Add(new GameMakerDecimalJsonConverter());
         options.Converters.Add(new GameMakerInt32JsonConverter());
         options.Converters.Add(new GameMakerInt64JsonConverter());
         options.Converters.Add(new JsonStringEnumConverter());

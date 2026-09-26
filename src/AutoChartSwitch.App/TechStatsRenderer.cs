@@ -46,12 +46,11 @@ public sealed class TechStatsRenderer : FrameworkElement
             return;
         }
 
+        Array.Clear(_targetValues, 0, _targetValues.Length);
+        Array.Clear(_animatedValues, 0, _animatedValues.Length);
+        Array.Clear(_displayValues, 0, _displayValues.Length);
         var values = (chart.TechStats ?? new ChartTechStats()).Values;
-        for (var i = 0; i < values.Count; i++)
-        {
-            _targetValues[i] = (double)values[i];
-            _displayValues[i] = values[i];
-        }
+        TechStatsLayout.CopyValues(values, _targetValues, _displayValues);
         _stepAccumulator = 0;
         _previousSeconds = _clock.Elapsed.TotalSeconds;
         InvalidateVisual();
@@ -126,12 +125,17 @@ public sealed class TechStatsRenderer : FrameworkElement
     private static void DrawNumber(DrawingContext drawingContext, decimal value, double top, Brush rainbowBrush)
     {
         var roundedValue = decimal.Round(value, 0, MidpointRounding.AwayFromZero);
-        var text = roundedValue.ToString("0", CultureInfo.InvariantCulture);
+        var text = TechStatsLayout.FormatNumber(roundedValue);
         var x = TechStatsLayout.GetNumberLeft(text.Length);
         foreach (var character in text)
         {
             var bounds = new Rect(x, top, TechStatsLayout.DigitWidth, TechStatsLayout.DigitHeight);
-            if (TechStatsPalette.UsesRainbowNumber(roundedValue))
+            if (character == '-')
+            {
+                drawingContext.DrawRectangle(TechStatsPalette.UsesRainbowNumber(roundedValue) ? rainbowBrush : Brushes.White,
+                    null, TechStatsLayout.GetMinusBounds(x, top));
+            }
+            else if (TechStatsPalette.UsesRainbowNumber(roundedValue))
             {
                 drawingContext.PushOpacityMask(new ImageBrush(Digits[character - '0']) { Stretch = Stretch.Fill });
                 drawingContext.DrawRectangle(rainbowBrush, null, bounds);
@@ -186,6 +190,21 @@ internal static class TechStatsLayout
 
     public static double GetNumberLeft(int digitCount) =>
         NumberRight - ((digitCount * DigitWidth) + (Math.Max(0, digitCount - 1) * (DigitAdvance - DigitWidth)));
+
+    public static string FormatNumber(decimal value) => value.ToString("0", CultureInfo.InvariantCulture);
+
+    public static Rect GetMinusBounds(double left, double top) => new(left + 8, top + 11, 5, 3);
+
+    public static void CopyValues(IReadOnlyList<decimal> values, double[] targets, decimal[] display)
+    {
+        Array.Clear(targets, 0, targets.Length);
+        Array.Clear(display, 0, display.Length);
+        for (var i = 0; i < Math.Min(values.Count, Math.Min(targets.Length, display.Length)); i++)
+        {
+            targets[i] = (double)values[i];
+            display[i] = values[i];
+        }
+    }
 }
 
 internal static class TechStatsPalette
@@ -195,7 +214,7 @@ internal static class TechStatsPalette
     public static Color GetRainbowColor(double elapsedMilliseconds) =>
         FromGameMakerHsv((elapsedMilliseconds / 2d) % 255d, 200, 255);
 
-    public static bool UsesRainbowNumber(decimal roundedValue) => roundedValue >= 400m;
+    public static bool UsesRainbowNumber(decimal roundedValue) => Math.Abs(roundedValue) >= 400m;
 
     private static Color FromGameMakerHsv(double hue, double saturation, double brightness)
     {

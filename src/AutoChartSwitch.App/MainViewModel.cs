@@ -63,7 +63,7 @@ public sealed class MainViewModel : ObservableObject
         {
             await WriteBridgeConfigAsync();
             await _gameSource.StartAsync();
-            BridgeText = $"Listening on 127.0.0.1:{_gameSource.Port}";
+            BridgeText = "Relay subscriber starting";
             StatusText = "Live monitor ready. Connect to OBS when needed to publish chart information.";
         }
         catch (Exception ex) { StatusText = $"Startup failed: {ex.Message}"; }
@@ -137,7 +137,7 @@ public sealed class MainViewModel : ObservableObject
         var path = Path.Combine(directory, "bridge.ini");
         await File.WriteAllTextAsync(path,
             $"[bridge]{Environment.NewLine}" +
-            $"port={Settings.BridgePort}{Environment.NewLine}" +
+            "port=28745" + Environment.NewLine +
             $"jacket_path={GameMakerJacketStagingPath}{Environment.NewLine}");
     }
 

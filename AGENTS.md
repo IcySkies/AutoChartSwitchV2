@@ -7,6 +7,9 @@
 
 ## VividStasis Mod Changes
 
-- After changing any file under `../SourceFiles/VividStasisModLoader/mods/AutoChartSwitch Game Bridge v2.0.0/`, run `../SourceFiles/VividStasisModLoader/vividstasisModLoader.exe` against the configured vivid/stasis installation before considering the work complete.
+- The authoritative GameMaker mod source is `../In-gameInfoAPI`; never edit the loader mirror directly.
+- After changing the mod, run `../In-gameInfoAPI/tools/Sync-ModToLoader.ps1` and `../In-gameInfoAPI/tools/Verify-ModSync.ps1`.
+- The installed loader package is `../SourceFiles/VividStasisModLoader/mods/VividStasisGameInfoAPI v3.0.0`.
+- After synchronization, run `../SourceFiles/VividStasisModLoader/vividstasisModLoader.exe` against the configured vivid/stasis installation before considering the work complete.
 - Verify the newest loader log ends with `Patch flow completed` and contains no missing-entry, patch, or compile errors.
 - Report the loader run and its validation result in the final response.

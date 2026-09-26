@@ -45,12 +45,17 @@ directory:
 
 ## Game bridge
 
-Enable `..\SourceFiles\VividStasisModLoader\mods\AutoChartSwitch Game Bridge v2.0.0`
-and run the loader against the supported `vivid/stasis` installation. The app
-listens on `127.0.0.1:28745` by default. The mod reconnects to that TCP port and
-sends length-prefixed UTF-8 JSON events. Connection attempts run asynchronously,
-so the game and app can be started in either order without blocking the game.
-The mod uses GameMaker's raw TCP mode to communicate with the .NET listener.
+The authoritative mod source is `..\In-gameInfoAPI`. Run
+`..\In-gameInfoAPI\tools\Sync-ModToLoader.ps1` and
+`..\In-gameInfoAPI\tools\Verify-ModSync.ps1`, then enable the installed
+`..\SourceFiles\VividStasisModLoader\mods\VividStasisGameInfoAPI v3.0.0`
+package and run the loader against the supported `vivid/stasis` installation.
+The separately installed `VividStasisGameInfoRelay.exe` owns `127.0.0.1:28745`.
+Start the relay independently of AutoChartSwitch V2. The app locates its
+`AutoChartSwitchV2/bridge-relay.json` discovery file under the configured game
+directory or beside a running relay executable, then connects to its subscriber
+port and receives length-prefixed UTF-8 JSON events. The relay can start before
+or after the game or app, and the app waits and reconnects asynchronously.
 
 The app writes the relative staging folder `AutoChartSwitchV2/Jackets` to
 `bridge.ini`. GameMaker stores exports from that path in its

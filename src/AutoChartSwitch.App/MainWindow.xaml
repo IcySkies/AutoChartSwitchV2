@@ -96,7 +96,6 @@
                         <WrapPanel Margin="0,0,0,10">
                             <StackPanel Width="230" Margin="0,0,12,8"><TextBlock Text="OBS WebSocket URL" /><TextBox Text="{Binding Settings.ObsUrl, UpdateSourceTrigger=PropertyChanged}" /></StackPanel>
                             <StackPanel Width="170" Margin="0,0,12,8"><TextBlock Text="Password" /><PasswordBox PasswordChanged="ObsPasswordBox_PasswordChanged" Loaded="ObsPasswordBox_Loaded" /></StackPanel>
-                            <StackPanel Width="100" Margin="0,0,12,8"><TextBlock Text="TCP port" /><TextBox Text="{Binding Settings.BridgePort}" /></StackPanel>
                             <StackPanel Width="330" Margin="0,0,12,8"><TextBlock Text="Game path" /><TextBox Text="{Binding Settings.GamePath}" /></StackPanel>
                             <StackPanel Width="300" Margin="0,0,12,8"><TextBlock Text="Jacket output folder" /><TextBox Text="{Binding Settings.JacketCachePath}" /></StackPanel>
                             <StackPanel Width="300" Margin="0,0,12,8"><TextBlock Text="Difficulty image folder" /><TextBox Text="{Binding Settings.DifficultyCustomPath}" /></StackPanel>

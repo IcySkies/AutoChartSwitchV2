@@ -35,7 +35,7 @@ public partial class App : System.Windows.Application
         var settings = await persistence.LoadSettingsAsync();
         var fontCoverage = new SystemFontCoverage(ObsChartPublisher.DefaultTextFont);
         var publisher = new ObsChartPublisher(fontCoverage.Supports);
-        var gameSource = new TcpGameEventSource(settings.BridgePort);
+        var gameSource = new RelayGameEventSource(settings.GamePath);
         var coordinator = new LiveChartCoordinator(gameSource, publisher);
         _viewModel = new MainViewModel(gameSource, publisher, coordinator, persistence, settings);
 

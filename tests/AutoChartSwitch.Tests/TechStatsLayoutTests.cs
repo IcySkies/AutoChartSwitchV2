@@ -62,6 +62,41 @@ public sealed class TechStatsLayoutTests
         Assert.Equal(expected, TechStatsPalette.UsesRainbowNumber(rounded));
     }
 
+    [Theory]
+    [InlineData(-0.4, "0")]
+    [InlineData(-1.4, "-1")]
+    [InlineData(-400, "-400")]
+    public void SignedNumbersKeepTheirMinusSign(decimal value, string expected) =>
+        Assert.Equal(expected, TechStatsLayout.FormatNumber(decimal.Round(value, 0, MidpointRounding.AwayFromZero)));
+
+    [Fact]
+    public void MinusGlyphUsesTheCenteredDigitCellGeometry()
+    {
+        var bounds = TechStatsLayout.GetMinusBounds(100, 20);
+
+        Assert.Equal(new System.Windows.Rect(108, 31, 5, 3), bounds);
+        Assert.Equal(TechStatsLayout.GetNumberLeft(2), TechStatsLayout.GetNumberLeft(1) - TechStatsLayout.DigitAdvance);
+    }
+
+    [Fact]
+    public void NegativeBarsAreClampedToZero()
+    {
+        Assert.Equal(0, TechStatsLayout.GetBarWidth(-25));
+        Assert.True(TechStatsPalette.UsesRainbowNumber(-400));
+    }
+
+    [Fact]
+    public void CopyValuesClearsStatsThatAreMissingFromTheNewChart()
+    {
+        var targets = new[] { 10d, 20d, 30d };
+        var display = new[] { 10m, 20m, 30m };
+
+        TechStatsLayout.CopyValues([7m], targets, display);
+
+        Assert.Equal([7d, 0d, 0d], targets);
+        Assert.Equal([7m, 0m, 0m], display);
+    }
+
     [Fact]
     public void RainbowHueUsesGameCurrentTimeRate()
     {

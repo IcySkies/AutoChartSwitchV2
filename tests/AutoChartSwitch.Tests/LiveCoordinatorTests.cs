@@ -62,6 +62,62 @@ public sealed class LiveCoordinatorTests
     }
 
     [Fact]
+    public async Task ChartInfoOnlyUpdatesPreviewWithoutPublishing()
+    {
+        var source = new FakeSource();
+        var publisher = new FakeLivePublisher();
+        await using var coordinator = new LiveChartCoordinator(source, publisher);
+        var settings = new AutoChartSettings();
+
+        await coordinator.HandleAsync(new GameEventEnvelope
+        {
+            Sequence = 1,
+            Kind = GameEventKind.ChartInfo,
+            Chart = new GameChartSnapshot { ChartId = "preview", RawDifficultyName = "OPENING", Title = "Preview" }
+        }, settings);
+
+        Assert.Equal("preview", coordinator.CurrentChart!.GameChartId);
+        Assert.Equal(0, publisher.PublishedCount);
+    }
+
+    [Fact]
+    public async Task ChartlessSelectionPublishesLatestPreview()
+    {
+        var source = new FakeSource();
+        var publisher = new FakeLivePublisher();
+        await using var coordinator = new LiveChartCoordinator(source, publisher);
+        var settings = new AutoChartSettings();
+
+        await coordinator.HandleAsync(new GameEventEnvelope
+        {
+            Sequence = 1,
+            Kind = GameEventKind.ChartInfo,
+            Chart = new GameChartSnapshot { ChartId = "confirmed", RawDifficultyName = "FINALE", Title = "Confirmed" }
+        }, settings);
+        await coordinator.HandleAsync(new GameEventEnvelope { Sequence = 2, Kind = GameEventKind.Selection }, settings);
+
+        Assert.Equal(1, publisher.PublishedCount);
+        Assert.Equal("confirmed", coordinator.CurrentChart!.GameChartId);
+    }
+
+    [Fact]
+    public async Task HighlightAfterConfirmationDoesNotChangeLiveChartUntilNextSelection()
+    {
+        var source = new FakeSource();
+        var publisher = new FakeLivePublisher();
+        await using var coordinator = new LiveChartCoordinator(source, publisher);
+        var settings = new AutoChartSettings();
+
+        await coordinator.HandleAsync(new GameEventEnvelope { Sequence = 1, Kind = GameEventKind.ChartInfo, Chart = new GameChartSnapshot { ChartId = "one", RawDifficultyName = "OPENING" } }, settings);
+        await coordinator.HandleAsync(new GameEventEnvelope { Sequence = 2, Kind = GameEventKind.Selection }, settings);
+        await coordinator.HandleAsync(new GameEventEnvelope { Sequence = 3, Kind = GameEventKind.ChartInfo, Chart = new GameChartSnapshot { ChartId = "two", RawDifficultyName = "FINALE" } }, settings);
+        await coordinator.HandleAsync(new GameEventEnvelope { Sequence = 4, Kind = GameEventKind.ChartLoadingStarted }, settings);
+
+        Assert.Equal(2, publisher.PublishedCount);
+        Assert.Equal("two", coordinator.CurrentChart!.GameChartId);
+    }
+
+    [Fact]
     public async Task RepeatedLifecycleEventsDoNotSwitchAgain()
     {
         var source = new FakeSource();

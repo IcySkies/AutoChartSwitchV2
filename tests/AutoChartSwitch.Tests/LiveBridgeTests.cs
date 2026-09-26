@@ -138,6 +138,57 @@ public sealed class LiveBridgeTests
     }
 
     [Fact]
+    public async Task RelaySourceConnectsUsingDiscoveryWithoutDependingOnRelayProcessId()
+    {
+        var root = Path.Combine(Path.GetTempPath(), "acs-v2-relay", Guid.NewGuid().ToString("N"));
+        var discoveryDirectory = Path.Combine(root, "AutoChartSwitchV2");
+        Directory.CreateDirectory(discoveryDirectory);
+        using var listener = new TcpListener(IPAddress.Loopback, 0);
+        listener.Start();
+        var subscriberPort = ((IPEndPoint)listener.LocalEndpoint).Port;
+        await File.WriteAllTextAsync(
+            Path.Combine(discoveryDirectory, "bridge-relay.json"),
+            JsonSerializer.Serialize(new
+            {
+                protocolVersion = 1,
+                host = "127.0.0.1",
+                gamePort = 28745,
+                subscriberPort,
+                processId = int.MaxValue
+            }));
+
+        try
+        {
+            await using var source = new RelayGameEventSource(root);
+            var received = new TaskCompletionSource<GameEventEnvelope>(TaskCreationOptions.RunContinuationsAsynchronously);
+            source.EventReceived += (_, envelope) => received.TrySetResult(envelope);
+            await source.StartAsync();
+
+            using var subscriber = await listener.AcceptTcpClientAsync().WaitAsync(TimeSpan.FromSeconds(3));
+            var envelope = new GameEventEnvelope
+            {
+                Sequence = 1,
+                Kind = GameEventKind.Selection,
+                Chart = new GameChartSnapshot { ChartId = "relay-song", RawDifficultyName = "OPENING" }
+            };
+            var payload = JsonSerializer.SerializeToUtf8Bytes(envelope, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+            var frame = new byte[sizeof(int) + payload.Length];
+            BitConverter.GetBytes(payload.Length).CopyTo(frame, 0);
+            payload.CopyTo(frame, sizeof(int));
+            await subscriber.GetStream().WriteAsync(frame);
+
+            var receivedEnvelope = await received.Task.WaitAsync(TimeSpan.FromSeconds(3));
+            Assert.Equal("relay-song", receivedEnvelope.Chart!.ChartId);
+            Assert.Equal(subscriberPort, source.Port);
+        }
+        finally
+        {
+            listener.Stop();
+            Directory.Delete(root, true);
+        }
+    }
+
+    [Fact]
     public async Task TcpSourceAcceptsSequenceRestartAfterGameReconnect()
     {
         var port = GetFreePort();
@@ -205,6 +256,42 @@ public sealed class LiveBridgeTests
     }
 
     [Fact]
+    public async Task TcpSourcePreservesBoundaryShatterMetadataAndTechStats()
+    {
+        var port = GetFreePort();
+        await using var source = new TcpGameEventSource(port);
+        var received = new TaskCompletionSource<GameEventEnvelope>(TaskCreationOptions.RunContinuationsAsynchronously);
+        source.EventReceived += (_, value) => received.TrySetResult(value);
+        await source.StartAsync();
+
+        const string json = """
+            {
+              "protocolVersion": 1.0,
+              "sequence": 9.0,
+              "kind": "LobbySelection",
+              "chart": {
+                "chartId": "SVCB3S",
+                "rawDifficultyName": "VIOLENCE",
+                "difficultyCode": "VIOLENCE",
+                "charter": "What for Keyboard(grode.)",
+                "difficultyNumber": 16.0,
+                "techStats": { "chip": 12.0, "tech": 34.0, "stream": 56.0, "chord": 78.0, "burst": 90.0, "gimmick": 1.0 }
+              }
+            }
+            """;
+
+        await SendRawEventAsync(port, json);
+        var envelope = await received.Task.WaitAsync(TimeSpan.FromSeconds(2));
+
+        Assert.Equal(GameEventKind.LobbySelection, envelope.Kind);
+        Assert.Equal("VIOLENCE", envelope.Chart!.RawDifficultyName);
+        Assert.Equal("SHATTER", envelope.Chart.ToChartInfo().DifficultyName);
+        Assert.Equal("What for Keyboard(grode.)", envelope.Chart.Charter);
+        Assert.Equal(16m, envelope.Chart.DifficultyNumber);
+        Assert.Equal(34m, envelope.Chart.TechStats.Tech);
+    }
+
+    [Fact]
     public async Task TcpSourceAcceptsChartLoadingStartedEventKind()
     {
         var port = GetFreePort();
@@ -251,6 +338,60 @@ public sealed class LiveBridgeTests
 
         Assert.Equal(GameEventKind.LobbySelection, envelope.Kind);
         Assert.Equal("lobby-song", envelope.Chart!.ChartId);
+    }
+
+    [Fact]
+    public async Task TcpSourceAcceptsWorldcrossRoomTelemetryAndIgnoresItInChartFlow()
+    {
+        var port = GetFreePort();
+        await using var source = new TcpGameEventSource(port);
+        var received = new TaskCompletionSource<GameEventEnvelope>(TaskCreationOptions.RunContinuationsAsynchronously);
+        source.EventReceived += (_, value) => received.TrySetResult(value);
+        await source.StartAsync();
+
+        const string json = """
+            {
+              "protocolVersion": "1.0",
+              "sequence": "12.0",
+              "kind": "WorldcrossRoom",
+              "worldcross": { "players": [
+                { "steamId64": "76561198000000001", "name": "Alice", "state": "ready", "rating": "12.5", "class": 7, "score": 1010000, "lastPlayScore": "1010000", "label": "FC" },
+                { "steamId64": "76561198000000002", "name": "Bot", "state": "unready", "rating": 0, "class": 0, "score": 0, "lastPlayScore": 0, "label": "" }
+              ] }
+            }
+            """;
+
+        await SendRawEventAsync(port, json);
+        var envelope = await received.Task.WaitAsync(TimeSpan.FromSeconds(2));
+
+        Assert.Equal(GameEventKind.WorldcrossRoom, envelope.Kind);
+        Assert.Equal("76561198000000001", envelope.Worldcross!.Players[0].SteamId64);
+        Assert.Equal(1010000m, envelope.Worldcross.Players[0].Score);
+        Assert.Equal(1010000m, envelope.Worldcross.Players[0].LastPlayScore);
+        Assert.Equal("FC", envelope.Worldcross.Players[0].Label);
+        Assert.Null(envelope.Chart);
+    }
+
+    [Fact]
+    public async Task TcpSourceAcceptsNumericWorldcrossGameplayEventKind()
+    {
+        var port = GetFreePort();
+        await using var source = new TcpGameEventSource(port);
+        var received = new TaskCompletionSource<GameEventEnvelope>(TaskCreationOptions.RunContinuationsAsynchronously);
+        source.EventReceived += (_, value) => received.TrySetResult(value);
+        await source.StartAsync();
+
+        const string json = """
+            { "protocolVersion": 1.0, "sequence": 13.0, "kind": 7,
+              "worldcross": { "players": [ { "steamId64": "76561198000000003", "state": "playing", "score": "1234.0", "label": "VS" } ] } }
+            """;
+
+        await SendRawEventAsync(port, json);
+        var envelope = await received.Task.WaitAsync(TimeSpan.FromSeconds(2));
+
+        Assert.Equal(GameEventKind.WorldcrossGameplay, envelope.Kind);
+        Assert.Equal(1234m, envelope.Worldcross!.Players[0].Score);
+        Assert.Equal("VS", envelope.Worldcross.Players[0].Label);
     }
 
     [Fact]

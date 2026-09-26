@@ -22,4 +22,11 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
   </ItemGroup>
+  <Target Name="RemoveBundledRelayArtifacts" AfterTargets="Build">
+    <ItemGroup>
+      <LegacyRelayArtifacts Include="$(OutDir)VividStasisGameInfoRelay.*" />
+      <LegacyRelayArtifacts Include="$(MSBuildProjectDirectory)\bin\$(Configuration)\VividStasisGameInfoRelay.*" />
+    </ItemGroup>
+    <Delete Files="@(LegacyRelayArtifacts)" />
+  </Target>
 </Project>
