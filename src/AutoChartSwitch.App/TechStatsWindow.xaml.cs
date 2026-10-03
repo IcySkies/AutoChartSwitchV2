@@ -13,7 +13,7 @@ public partial class TechStatsWindow : Window
         InitializeComponent();
         _viewModel = viewModel;
         _viewModel.PropertyChanged += ViewModel_PropertyChanged;
-        Loaded += (_, _) => Renderer.SetChart(_viewModel.CurrentDisplay);
+        Loaded += (_, _) => Renderer.SetChart(_viewModel.SelectedChart);
         Closing += TechStatsWindow_Closing;
         MouseLeftButtonDown += (_, _) => DragMove();
     }
@@ -22,7 +22,7 @@ public partial class TechStatsWindow : Window
 
     private void ViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(MainViewModel.CurrentDisplay)) Renderer.SetChart(_viewModel.CurrentDisplay);
+        if (e.PropertyName == nameof(MainViewModel.SelectedChart)) Renderer.SetChart(_viewModel.SelectedChart);
     }
 
     private void TechStatsWindow_Closing(object? sender, CancelEventArgs e)

@@ -13,15 +13,23 @@ public sealed class RelayGameEventSource : IGameEventSource
     private const int MaxFrameBytes = 1024 * 1024;
     private static readonly JsonSerializerOptions JsonOptions = CreateJsonOptions();
     private readonly string _gamePath;
+    private readonly string _sharedDiscoveryPath;
     private TcpClient? _client;
     private CancellationTokenSource? _stop;
     private Task? _loop;
+    private readonly SemaphoreSlim _wake = new(0, 1);
     public bool IsListening { get; private set; }
     public int Port { get; private set; } = 0;
     public event EventHandler<GameEventEnvelope>? EventReceived;
     public event EventHandler<string>? StatusChanged;
 
-    public RelayGameEventSource(string gamePath) => _gamePath = gamePath;
+    public RelayGameEventSource(string gamePath, string? sharedDiscoveryPath = null)
+    {
+        _gamePath = gamePath;
+        _sharedDiscoveryPath = sharedDiscoveryPath ?? Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "SVC-AS", "VividStasisGameInfoRelay", "bridge-relay.json");
+    }
 
     public Task StartAsync(CancellationToken cancellationToken = default)
     {
@@ -38,19 +46,31 @@ public sealed class RelayGameEventSource : IGameEventSource
         {
             try
             {
-                var discovery = await ReadDiscoveryAsync(cancellationToken);
-                if (discovery is null)
+                var connected = false;
+                foreach (var path in GetDiscoveryPaths())
                 {
-                    StatusChanged?.Invoke(this, "API relay not found; waiting for a running VividStasisGameInfoRelay.");
-                    await Task.Delay(1000, cancellationToken);
-                    continue;
+                    var discovery = await ReadDiscoveryAsync(path, cancellationToken);
+                    if (discovery is null) continue;
+                    using var client = new TcpClient();
+                    _client = client;
+                    try
+                    {
+                        await client.ConnectAsync(discovery.Host, discovery.SubscriberPort, cancellationToken);
+                        Port = discovery.SubscriberPort;
+                        connected = true;
+                        StatusChanged?.Invoke(this, $"Relay subscriber connected on {discovery.Host}:{discovery.SubscriberPort}.");
+                        await ReadFramesAsync(client, cancellationToken);
+                        break;
+                    }
+                    catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { throw; }
+                    catch (Exception ex)
+                    {
+                        StatusChanged?.Invoke(this, $"Relay at {discovery.Host}:{discovery.SubscriberPort} unavailable: {ex.Message}");
+                    }
+                    finally { _client = null; }
                 }
-                Port = discovery.SubscriberPort;
-                using var client = new TcpClient();
-                _client = client;
-                await client.ConnectAsync(discovery.Host, discovery.SubscriberPort, cancellationToken);
-                StatusChanged?.Invoke(this, $"Relay subscriber connected on {discovery.Host}:{discovery.SubscriberPort}.");
-                await ReadFramesAsync(client, cancellationToken);
+                if (!connected)
+                    StatusChanged?.Invoke(this, "API relay not found; waiting for a running VividStasisGameInfoRelay.");
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { break; }
             catch (Exception ex)
@@ -58,7 +78,7 @@ public sealed class RelayGameEventSource : IGameEventSource
                 StatusChanged?.Invoke(this, $"Relay disconnected: {ex.Message}");
             }
             finally { _client = null; }
-            if (!cancellationToken.IsCancellationRequested) await Task.Delay(1000, cancellationToken);
+            if (!cancellationToken.IsCancellationRequested) await DelayOrWakeAsync(cancellationToken);
         }
     }
 
@@ -82,49 +102,58 @@ public sealed class RelayGameEventSource : IGameEventSource
         }
     }
 
-    private async Task<RelayDiscovery?> ReadDiscoveryAsync(CancellationToken cancellationToken)
+    private static async Task<RelayDiscovery?> ReadDiscoveryAsync(string path, CancellationToken cancellationToken)
     {
-        foreach (var path in GetDiscoveryPaths())
+        try
         {
-            try
-            {
-                await using var stream = File.OpenRead(path);
-                var discovery = await JsonSerializer.DeserializeAsync<RelayDiscovery>(stream, new JsonSerializerOptions(JsonSerializerDefaults.Web), cancellationToken);
-                if (discovery is not null &&
-                    discovery.ProtocolVersion == 1 &&
-                    discovery.GamePort == 28745 &&
-                    discovery.SubscriberPort is >= 1 and <= 65535 &&
-                    !string.IsNullOrWhiteSpace(discovery.Host))
-                    return discovery;
-            }
-            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { throw; }
-            catch { }
+            await using var stream = File.OpenRead(path);
+            var discovery = await JsonSerializer.DeserializeAsync<RelayDiscovery>(stream, new JsonSerializerOptions(JsonSerializerDefaults.Web), cancellationToken);
+            if (discovery is not null &&
+                discovery.ProtocolVersion == 1 &&
+                discovery.GamePort == 28745 &&
+                discovery.SubscriberPort is >= 1 and <= 65535 &&
+                !string.IsNullOrWhiteSpace(discovery.Host))
+                return discovery;
         }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { throw; }
+        catch { }
         return null;
     }
 
     private IEnumerable<string> GetDiscoveryPaths()
     {
-        var directories = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var paths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         if (!string.IsNullOrWhiteSpace(_gamePath))
-            directories.Add(Path.GetFullPath(Path.Combine(_gamePath, "AutoChartSwitchV2")));
+        {
+            var path = Path.GetFullPath(Path.Combine(_gamePath, "AutoChartSwitchV2", "bridge-relay.json"));
+            if (paths.Add(path)) yield return path;
+        }
+
+        if (paths.Add(_sharedDiscoveryPath)) yield return _sharedDiscoveryPath;
 
         foreach (var process in Process.GetProcessesByName("VividStasisGameInfoRelay"))
         {
+            string? path = null;
             using (process)
             {
                 try
                 {
                     var executable = process.MainModule?.FileName;
                     if (!string.IsNullOrWhiteSpace(executable))
-                        directories.Add(Path.Combine(Path.GetDirectoryName(executable)!, "AutoChartSwitchV2"));
+                        path = Path.Combine(Path.GetDirectoryName(executable)!, "AutoChartSwitchV2", "bridge-relay.json");
                 }
                 catch { }
             }
+            if (path is not null && paths.Add(path)) yield return path;
         }
+    }
 
-        foreach (var directory in directories)
-            yield return Path.Combine(directory, "bridge-relay.json");
+    public Task FindRelayAsync()
+    {
+        StatusChanged?.Invoke(this, "Searching for a running API relay...");
+        try { _client?.Close(); } catch { }
+        if (_wake.CurrentCount == 0) _wake.Release();
+        return Task.CompletedTask;
     }
 
     public async Task StopAsync()
@@ -136,6 +165,11 @@ public sealed class RelayGameEventSource : IGameEventSource
         if (_loop is not null) try { await _loop; } catch (OperationCanceledException) { }
         _stop?.Dispose();
         _stop = null;
+    }
+
+    private async Task DelayOrWakeAsync(CancellationToken cancellationToken)
+    {
+        await _wake.WaitAsync(TimeSpan.FromSeconds(1), cancellationToken);
     }
 
     public async ValueTask DisposeAsync() => await StopAsync();
@@ -159,6 +193,7 @@ public sealed class RelayGameEventSource : IGameEventSource
         options.Converters.Add(new FlexibleInt32Converter());
         options.Converters.Add(new FlexibleInt64Converter());
         options.Converters.Add(new FlexibleGameEventKindConverter());
+        options.Converters.Add(new JsonStringEnumConverter());
         return options;
     }
 

@@ -118,6 +118,39 @@ public sealed class LiveCoordinatorTests
     }
 
     [Fact]
+    public async Task TechStatsStayOnSelectedChartWhileHighlightChanges()
+    {
+        await using var coordinator = new LiveChartCoordinator(new FakeSource(), new FakeLivePublisher());
+        var settings = new AutoChartSettings();
+        var selectedUpdates = new List<string>();
+        coordinator.SelectedChartChanged += (_, _) => selectedUpdates.Add(coordinator.SelectedChart!.GameChartId);
+
+        await coordinator.HandleAsync(new GameEventEnvelope
+        {
+            Sequence = 1, Kind = GameEventKind.ChartInfo,
+            Chart = new GameChartSnapshot { ChartId = "first", TechStats = new() { Chip = 10 } }
+        }, settings);
+        Assert.Null(coordinator.SelectedChart);
+        Assert.Empty(selectedUpdates);
+
+        await coordinator.HandleAsync(new GameEventEnvelope { Sequence = 2, Kind = GameEventKind.Selection }, settings);
+        Assert.Equal(10, coordinator.SelectedChart!.TechStats.Chip);
+
+        await coordinator.HandleAsync(new GameEventEnvelope
+        {
+            Sequence = 3, Kind = GameEventKind.ChartInfo,
+            Chart = new GameChartSnapshot { ChartId = "second", TechStats = new() { Chip = 20 } }
+        }, settings);
+        Assert.Equal("second", coordinator.CurrentChart!.GameChartId);
+        Assert.Equal("first", coordinator.SelectedChart!.GameChartId);
+        Assert.Equal(["first"], selectedUpdates);
+
+        await coordinator.HandleAsync(new GameEventEnvelope { Sequence = 4, Kind = GameEventKind.Selection }, settings);
+        Assert.Equal(20, coordinator.SelectedChart!.TechStats.Chip);
+        Assert.Equal(["first", "second"], selectedUpdates);
+    }
+
+    [Fact]
     public async Task RepeatedLifecycleEventsDoNotSwitchAgain()
     {
         var source = new FakeSource();
@@ -157,6 +190,7 @@ public sealed class LiveCoordinatorTests
         public event EventHandler<GameEventEnvelope>? EventReceived { add { } remove { } }
         public event EventHandler<string>? StatusChanged { add { } remove { } }
         public Task StartAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task FindRelayAsync() => Task.CompletedTask;
         public Task StopAsync() => Task.CompletedTask;
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }

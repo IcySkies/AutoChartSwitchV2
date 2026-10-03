@@ -10,6 +10,7 @@ public partial class MainWindow : Window
 
     private async void Connect_Click(object sender, RoutedEventArgs e) => await RunAsync(() => ViewModel?.ConnectAsync());
     private async void Refresh_Click(object sender, RoutedEventArgs e) => await RunAsync(() => ViewModel?.RefreshSourcesAsync());
+    private async void FindRelay_Click(object sender, RoutedEventArgs e) => await RunAsync(() => ViewModel?.FindRelayAsync());
     private void TechStats_Click(object sender, RoutedEventArgs e) => ViewModel?.ShowTechStats();
     private async void RetryExit_Click(object sender, RoutedEventArgs e) => await RunAsync(() => ViewModel?.RetryExitAsync());
     private async void SettingsChanged(object sender, RoutedEventArgs e) => await RunAsync(() => ViewModel?.SaveSettingsAsync());

@@ -16,6 +16,7 @@ public sealed class MainViewModel : ObservableObject
     private readonly AppPersistence _persistence;
     private bool _isBusy;
     private ChartInfo? _currentDisplay;
+    private ChartInfo? _selectedChart;
     private string _statusText = "Starting live monitor...";
     private string _connectionText = "Disconnected";
     private string _bridgeText = "Stopped";
@@ -29,6 +30,7 @@ public sealed class MainViewModel : ObservableObject
     public ObservableCollection<string> ImageInputs { get; } = [];
     public ObservableCollection<string> Scenes { get; } = [];
     public ChartInfo? CurrentDisplay { get => _currentDisplay; private set => SetProperty(ref _currentDisplay, value); }
+    public ChartInfo? SelectedChart { get => _selectedChart; private set => SetProperty(ref _selectedChart, value); }
     public string StatusText { get => _statusText; set => SetProperty(ref _statusText, value); }
     public string ConnectionText { get => _connectionText; private set => SetProperty(ref _connectionText, value); }
     public string BridgeText { get => _bridgeText; private set => SetProperty(ref _bridgeText, value); }
@@ -38,7 +40,7 @@ public sealed class MainViewModel : ObservableObject
     public bool HasExitError { get => _hasExitError; private set => SetProperty(ref _hasExitError, value); }
     public string CurrentDifficulty => CurrentDisplay is null ? "" : $"{CurrentDisplay.DifficultyName} {ChartFormatter.FormatDifficulty(CurrentDisplay.DifficultyNumber)}".TrimEnd();
     public string CurrentCredits => CurrentDisplay?.CreditsText ?? "";
-    public string CurrentTechStats => CurrentDisplay is null ? "" : FormatTechStats(CurrentDisplay.TechStats);
+    public string CurrentTechStats => SelectedChart is null ? "" : FormatTechStats(SelectedChart.TechStats);
     public bool HasCurrent => CurrentDisplay is not null;
     public event EventHandler? ShowTechStatsRequested;
 
@@ -52,6 +54,7 @@ public sealed class MainViewModel : ObservableObject
         Settings = settings;
         _coordinator.SetSettings(settings);
         _coordinator.CurrentChartChanged += OnCurrentChartChanged;
+        _coordinator.SelectedChartChanged += OnSelectedChartChanged;
         _coordinator.StatusChanged += OnStatusChanged;
         _publisher.ConnectionChanged += OnConnectionChanged;
         _gameSource.StatusChanged += OnBridgeStatusChanged;
@@ -67,6 +70,12 @@ public sealed class MainViewModel : ObservableObject
             StatusText = "Live monitor ready. Connect to OBS when needed to publish chart information.";
         }
         catch (Exception ex) { StatusText = $"Startup failed: {ex.Message}"; }
+    }
+
+    public async Task FindRelayAsync()
+    {
+        BridgeText = "Searching for a running API relay...";
+        await _gameSource.FindRelayAsync();
     }
 
     public async Task ConnectAsync()
@@ -155,10 +164,15 @@ public sealed class MainViewModel : ObservableObject
             CurrentDisplay = _coordinator.CurrentChart;
             OnPropertyChanged(nameof(CurrentDifficulty));
             OnPropertyChanged(nameof(CurrentCredits));
-            OnPropertyChanged(nameof(CurrentTechStats));
             OnPropertyChanged(nameof(HasCurrent));
         });
     }
+
+    private void OnSelectedChartChanged(object? sender, EventArgs e) => RunOnUi(() =>
+    {
+        SelectedChart = _coordinator.SelectedChart;
+        OnPropertyChanged(nameof(CurrentTechStats));
+    });
 
     private void OnStatusChanged(object? sender, string message) => RunOnUi(() =>
     {

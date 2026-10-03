@@ -19,14 +19,20 @@
     <ProjectReference Include="..\AutoChartSwitch.Core\AutoChartSwitch.Core.csproj" />
     <ProjectReference Include="..\AutoChartSwitch.GameBridge\AutoChartSwitch.GameBridge.csproj" />
     <ProjectReference Include="..\AutoChartSwitch.Obs\AutoChartSwitch.Obs.csproj" />
+    <ProjectReference Include="..\..\..\In-gameInfoAPI\VividStasisGameInfoRelay\VividStasisGameInfoRelay.csproj" ReferenceOutputAssembly="false" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
   </ItemGroup>
-  <Target Name="RemoveBundledRelayArtifacts" AfterTargets="Build">
+  <Target Name="CopyRelay" AfterTargets="Build">
     <ItemGroup>
-      <LegacyRelayArtifacts Include="$(OutDir)VividStasisGameInfoRelay.*" />
-      <LegacyRelayArtifacts Include="$(MSBuildProjectDirectory)\bin\$(Configuration)\VividStasisGameInfoRelay.*" />
+      <RelayFiles Include="$(MSBuildProjectDirectory)\..\..\..\In-gameInfoAPI\VividStasisGameInfoRelay\bin\$(Configuration)\net8.0-windows\VividStasisGameInfoRelay.*" />
     </ItemGroup>
-    <Delete Files="@(LegacyRelayArtifacts)" />
+    <Copy SourceFiles="@(RelayFiles)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+  </Target>
+  <Target Name="PublishRelay" AfterTargets="Publish">
+    <ItemGroup>
+      <RelayFiles Include="$(MSBuildProjectDirectory)\..\..\..\In-gameInfoAPI\VividStasisGameInfoRelay\bin\$(Configuration)\net8.0-windows\VividStasisGameInfoRelay.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(RelayFiles)" DestinationFolder="$(PublishDir)" SkipUnchangedFiles="true" />
   </Target>
 </Project>

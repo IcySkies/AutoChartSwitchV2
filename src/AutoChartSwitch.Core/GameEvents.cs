@@ -89,6 +89,7 @@ public interface IGameEventSource : IAsyncDisposable
     event EventHandler<GameEventEnvelope>? EventReceived;
     event EventHandler<string>? StatusChanged;
     Task StartAsync(CancellationToken cancellationToken = default);
+    Task FindRelayAsync();
     Task StopAsync();
 }
 
@@ -117,9 +118,11 @@ public sealed class LiveChartCoordinator : IAsyncDisposable
     private bool _disposed;
 
     public ChartInfo? CurrentChart { get; private set; }
+    public ChartInfo? SelectedChart => _confirmedChart;
     public GameEventKind? LastEventKind { get; private set; }
     public long LastSequence { get; private set; }
     public event EventHandler? CurrentChartChanged;
+    public event EventHandler? SelectedChartChanged;
     public event EventHandler<string>? StatusChanged;
 
     public LiveChartCoordinator(IGameEventSource source, ILiveChartPublisher publisher)
@@ -152,10 +155,14 @@ public sealed class LiveChartCoordinator : IAsyncDisposable
                     if (envelope.Chart is not null) _confirmedChart = CurrentChart;
                     else if (CurrentChart is not null) _confirmedChart = CurrentChart;
                     if (_confirmedChart is not null)
+                    {
+                        SelectedChartChanged?.Invoke(this, EventArgs.Empty);
                         Raise(await _publisher.PublishSelectionAsync(_confirmedChart, settings, cancellationToken));
+                    }
                     break;
                 case GameEventKind.LobbySelection when CurrentChart is not null:
                     _confirmedChart = CurrentChart;
+                    SelectedChartChanged?.Invoke(this, EventArgs.Empty);
                     Raise(await _publisher.PublishSelectionAsync(_confirmedChart, settings, cancellationToken));
                     break;
                 case GameEventKind.ChartLoadingStarted:

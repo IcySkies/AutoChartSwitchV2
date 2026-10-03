@@ -23,6 +23,7 @@
                               Margin="0,0,16,0" Checked="SettingsChanged" Unchecked="SettingsChanged" />
                     <Button Content="Connect / Disconnect" Click="Connect_Click" />
                     <Button Content="Refresh OBS" Click="Refresh_Click" />
+                    <Button Content="Find Relay" Click="FindRelay_Click" />
                     <Button Content="Tech Stats" Click="TechStats_Click" Margin="0" />
                 </StackPanel>
             </DockPanel>

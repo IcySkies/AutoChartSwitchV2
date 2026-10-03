@@ -53,9 +53,13 @@ package and run the loader against the supported `vivid/stasis` installation.
 The separately installed `VividStasisGameInfoRelay.exe` owns `127.0.0.1:28745`.
 Start the relay independently of AutoChartSwitch V2. The app locates its
 `AutoChartSwitchV2/bridge-relay.json` discovery file under the configured game
-directory or beside a running relay executable, then connects to its subscriber
-port and receives length-prefixed UTF-8 JSON events. The relay can start before
+directory, shared local-app-data discovery directory, or beside a running relay
+executable, then connects to its subscriber port and receives length-prefixed
+UTF-8 JSON events. Refused stale endpoints are skipped when checking other
+discovery locations. The relay can start before
 or after the game or app, and the app waits and reconnects asynchronously.
+The Release build also builds and packages the complete relay runtime beside
+the application.
 
 The app writes the relative staging folder `AutoChartSwitchV2/Jackets` to
 `bridge.ini`. GameMaker stores exports from that path in its
